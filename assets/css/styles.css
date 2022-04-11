@@ -1,0 +1,43 @@
+body {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+header {
+    text-align: center;
+    background: linear-gradient(270deg, #160979 0%, #0585a0 62%, #00ffb3 100%);
+    padding: 14px 0px 10px 0px;
+    margin: 0 0 10px 0;
+    border-bottom: solid 2px black;
+}
+
+h1 {
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-shadow: -2px 2px black;
+}
+
+.container {
+    margin: 0;
+}
+
+.btn {
+    width: 100%;
+}
+
+#current-weather {
+    color: white;
+    background-color: rgba(22,9,121,.9);
+}
+
+.uvi {
+    border-radius: 25%;
+    padding: 2px 6px;
+}
+
+.card-header-bg {
+    background-color: #0585a0;
+}
+
+.card-body-bg { 
+    background-color: rgba(0,255,179,.5);
+}

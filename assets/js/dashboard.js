@@ -1,29 +1,3 @@
-/*
-xxConnect search field to input
-
-xxCity and current date
-xxCurrent weather conditions
-    xxicon of weather
-    xxtemperature
-    xxhumidity
-    xxwind speed
-    xxUV index
-        color indicates whether conditions are favorable/moderate/severe
-xxFuture weather conditions
-    xx5-day forecast
-        xxdate
-        xxicon for weather 
-        xxtemp
-        xxwind speed
-        xxhumidity
-Add to search history when entered
-Click from search history searches it again
-
-*/
-
-
-
-
 // key for openweathermap
 var apiKey = 'e0a6afee4ced0e5525c4a7c68c4ed596';
 var cityLog = [];
@@ -95,7 +69,8 @@ function getCurrentWeather(lat, lon) {
         // Define the UV value, create a span for the value that will change color based on the UV value, and create the text line for the UV index
         var uvi = weatherData.current.uvi;
         var ratedUV = $('<span>')
-            .text(uvi);
+            .text(uvi)
+            .addClass('uvi');
         if (0 <= uvi && 2 >= uvi) {
             ratedUV.addClass("bg-success")
         }
@@ -111,7 +86,9 @@ function getCurrentWeather(lat, lon) {
         curUVI.append(ratedUV);
 
         // Add all of the weather data to the current weather div
-        $("#current-weather").append(curWeatherIcon, curTemp, curHum, curWindSpeed, curUVI);
+        $("#current-weather")
+            .append(curWeatherIcon, curTemp, curHum, curWindSpeed, curUVI)
+            .addClass('p-2 shadow border border-primary rounded');
     })
 }
 
@@ -126,14 +103,14 @@ function getFutureWeather(lat, lon) {
         for (i = 1; i < 6; i++) {
             // Create a card for each day
             var dayCard = $('<div>')
-                .addClass('card');
+                .addClass('card mt-4 shadow');
             // Set a header to the card with the date
             var dayCardHeader = $('<h5>')
-                .addClass('card-header')
+                .addClass('card-header card-header-bg')
                 .text(moment().add(i, 'd').format('MM/DD/YYYY'));
             // Create a div for the body of the card
             var dayCardBody = $('<div>')
-                .addClass('card-body');
+                .addClass('card-body card-body-bg');
             // Create an icon for the weather
             var dayWeatherIcon = $('<img>')
                 .attr('src', 'http://openweathermap.org/img/wn/' + futureData.daily[i].weather[0].icon + '.png');
@@ -157,38 +134,45 @@ function getFutureWeather(lat, lon) {
     })
 }
 
-// 
+// Save entered city to local storage
 function saveLocation(city) {
     var cityEntry = $('#city').val();
-    console.log(cityEntry);
+    // Add new entry to array
     cityLog.push(cityEntry);
-    console.log(cityLog);
 
+    // stringify and add to localstorage
     localStorage.setItem('city', JSON.stringify(cityLog));
 }
 
+// Check local storage for array values and generate history buttons
 function cityHistory() {
-    var tempCities = JSON.parse(localStorage.getItem('city'))
-    console.log(tempCities);
+    // get items from local storage
+    var tempCities = JSON.parse(localStorage.getItem('city'));
 
+    // Check if no values are returned and quit if so
     if (!tempCities) {
         return;
     }
 
+    // Set array to the values from local storage
     cityLog = tempCities;
+    // Clear the history container
     $('#search-history').empty();
+    // Populate the history container based on the items in the array
     for (i=0; i < cityLog.length; i++) {
-        console.log(cityLog[i]);
         var cityItem = $('<button>')
             .text(cityLog[i])
             .attr('type', 'button')
+            .addClass('btn btn-secondary mt-1')
+            // Add listener to the button to pass in the button value to the search on click
             .on('click', function(event) {
                 event.preventDefault();
                 getLocationData($(this).text());
             })
+        // Add each item button to the beginning of the history div
         $('#search-history').prepend(cityItem);
     }
 }
 
-
+// Must call this at the beginning to prepopulate history buttons before anything is searched
 cityHistory();
